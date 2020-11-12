@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "702443834173",
+    "firebase_url": "https://scanpal-f74da.firebaseio.com",
+    "project_id": "scanpal-f74da",
+    "storage_bucket": "scanpal-f74da.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:702443834173:android:c2d688d2d65a363cda1354",
+        "android_client_info": {
+          "package_name": "com.scanpal.merchant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "702443834173-vaupl3ft615ghqe0cr4cc2v2huvkpl24.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyf50wY-v9ssykgHy8GlbnCyOYPym040I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "702443834173-vaupl3ft615ghqe0cr4cc2v2huvkpl24.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:702443834173:android:2aa3421522c5ec8bda1354",
+        "android_client_info": {
+          "package_name": "com.scanpal.shambarecords"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "702443834173-vaupl3ft615ghqe0cr4cc2v2huvkpl24.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyf50wY-v9ssykgHy8GlbnCyOYPym040I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "702443834173-vaupl3ft615ghqe0cr4cc2v2huvkpl24.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
