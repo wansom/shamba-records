@@ -4,15 +4,21 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:shambarecords/components/custom_surfix_icon.dart';
 import 'package:shambarecords/components/paymentform.dart';
 import 'package:shambarecords/constants/color_constant.dart';
+import 'package:shambarecords/loading.dart';
 import 'package:shambarecords/models/card_model.dart';
 import 'package:shambarecords/models/operation_model.dart';
+import 'package:shambarecords/models/payments_model.dart';
 import 'package:shambarecords/models/transaction_model.dart';
+import 'package:shambarecords/providers/records_stream.dart';
 import 'package:shambarecords/providers/user_provider.dart';
+import 'package:shambarecords/screens/complete_profile/complete_profile_screen.dart';
+import 'package:shambarecords/services/user_services.dart';
 
 import '../constants.dart';
 
@@ -109,8 +115,15 @@ class _HomeScreenState extends State<HomeScreen>
                 Text("Phone: ${user.userModel?.phone}",
                     style: TextStyle(color: Colors.white, fontSize: 22)),
                 SizedBox(height: 10),
-                Text("Update Profile",
-                    style: TextStyle(color: Colors.white, fontSize: 22)),
+                InkWell(
+                  splashColor: Colors.green,
+                  onTap: () {
+                    Navigator.pushNamed(
+                        context, CompleteProfileScreen.routeName);
+                  },
+                  child: Text("Update Profile",
+                      style: TextStyle(color: Colors.white, fontSize: 22)),
+                ),
                 SizedBox(height: 10),
                 InkWell(
                   splashColor: Colors.white,
@@ -144,6 +157,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget dashboard(context) {
     final user = Provider.of<UserProvider>(context);
+    final records = Provider.of<RecordStream>(context);
     return AnimatedPositioned(
       duration: duration,
       top: 0,
@@ -386,7 +400,7 @@ class _HomeScreenState extends State<HomeScreen>
                               isDismissible: true,
                               builder: (context, scrollController) => Container(
                                 height:
-                                    MediaQuery.of(context).size.height * (0.75),
+                                    MediaQuery.of(context).size.height * (0.85),
                                 child: ListView(
                                   children: [
                                     SizedBox(
@@ -448,7 +462,13 @@ class _HomeScreenState extends State<HomeScreen>
                                               width: 320.0,
                                               child: RaisedButton(
                                                 onPressed: () async {
+                                                  await UserServices()
+                                                      .requestLoan(
+                                                    user: user.user,
+                                                    amount: _options,
+                                                  );
                                                   Navigator.pop(context);
+
                                                   Flushbar(
                                                     title: "Thank You",
                                                     message:
@@ -509,85 +529,98 @@ class _HomeScreenState extends State<HomeScreen>
                         color: kBlackColor),
                   ),
                 ),
-                ListView.builder(
-                  itemCount: transactions.length,
-                  padding: EdgeInsets.only(left: 16, right: 16),
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      height: 76,
-                      margin: EdgeInsets.only(bottom: 13),
-                      padding: EdgeInsets.only(
-                          left: 24, top: 12, bottom: 12, right: 22),
-                      decoration: BoxDecoration(
-                        color: kWhiteColor,
-                        borderRadius: BorderRadius.circular(15),
-                        boxShadow: [
-                          BoxShadow(
-                            color: kTenBlackColor,
-                            blurRadius: 10,
-                            spreadRadius: 5,
-                            offset: Offset(8.0, 8.0),
-                          )
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Container(
-                                height: 57,
-                                width: 57,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    image:
-                                        AssetImage(transactions[index].photo),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 13,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  AutoSizeText(
-                                    transactions[index].name,
-                                    style: GoogleFonts.inter(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w700,
-                                        color: kBlackColor),
-                                  ),
-                                  Text(
-                                    transactions[index].date,
-                                    style: GoogleFonts.inter(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w400,
-                                        color: kGreyColor),
+                StreamBuilder<List<ContributionsModel>>(
+                    stream: records.records,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        var contribution = snapshot.data;
+                        return ListView.builder(
+                          itemCount: contribution.length,
+                          padding: EdgeInsets.only(left: 16, right: 16),
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              height: 86,
+                              margin: EdgeInsets.only(bottom: 13),
+                              padding: EdgeInsets.only(
+                                  left: 24, top: 12, bottom: 12, right: 22),
+                              decoration: BoxDecoration(
+                                color: kWhiteColor,
+                                borderRadius: BorderRadius.circular(15),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: kTenBlackColor,
+                                    blurRadius: 10,
+                                    spreadRadius: 5,
+                                    offset: Offset(8.0, 8.0),
                                   )
                                 ],
-                              )
-                            ],
-                          ),
-                          Row(
-                            children: <Widget>[
-                              Text(
-                                transactions[index].amount,
-                                style: GoogleFonts.inter(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.green),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    );
-                  },
-                )
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Container(
+                                        height: 47,
+                                        width: 47,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                            image: AssetImage(
+                                                'assets/images/logo.jpg'),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 8,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          AutoSizeText(
+                                            '${contribution[index].paymenttype}',
+                                            style: GoogleFonts.inter(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w700,
+                                                color: kBlackColor),
+                                          ),
+                                          AutoSizeText(
+                                            '${DateFormat.jm().format(contribution[index].date.toDate())}',
+
+                                            //contribution[index].date,
+                                            style: GoogleFonts.inter(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w400,
+                                                color: kGreyColor),
+                                          ),
+                                          Text(
+                                            'ksh ${contribution[index].amount}',
+                                            style: GoogleFonts.inter(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.green),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      } else if (snapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return Loading();
+                      } else {
+                        return Container();
+                      }
+                    })
               ],
             ),
           ),

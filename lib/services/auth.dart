@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shambarecords/screens/dashboard.dart';
+import 'package:shambarecords/screens/home_screen.dart';
 import 'package:shambarecords/screens/loginpages.dart';
+import 'package:shambarecords/screens/splash/splash_screen.dart';
 
 class AuthService {
   //Handles Auth
@@ -10,9 +11,11 @@ class AuthService {
         stream: FirebaseAuth.instance.onAuthStateChanged,
         builder: (BuildContext context, snapshot) {
           if (snapshot.hasData) {
-            return Dashboard();
-          } else {
+            return HomeScreen();
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
             return LoginPage();
+          } else {
+            return SplashScreen();
           }
         });
   }

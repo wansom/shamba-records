@@ -4,7 +4,7 @@ import 'package:shambarecords/components/custom_surfix_icon.dart';
 import 'package:shambarecords/components/default_button.dart';
 import 'package:shambarecords/components/form_error.dart';
 import 'package:shambarecords/constants.dart';
-import 'package:shambarecords/size_config.dart';
+import 'package:shambarecords/services/user_services.dart';
 
 class PaymentForm extends StatefulWidget {
   @override
@@ -71,7 +71,7 @@ class _PaymentFormState extends State<PaymentForm> {
                 suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Cash.svg"),
               ),
             ),
-            SizedBox(height: getProportionateScreenHeight(30)),
+            SizedBox(height: 30.0),
             TextFormField(
               initialValue: initial,
               onSaved: (newValue) => phone = newValue,
@@ -103,9 +103,9 @@ class _PaymentFormState extends State<PaymentForm> {
                     CustomSurffixIcon(svgIcon: "assets/icons/Phone.svg"),
               ),
             ),
-            SizedBox(height: getProportionateScreenHeight(20)),
+            SizedBox(height: 20.0),
             DropdownButtonFormField(
-              value: _paymenttype ?? 'Chama Payment',
+              value: _paymenttype ?? 'Society Contribution',
               items: paymenttype.map((sugar) {
                 return DropdownMenuItem(
                   value: sugar,
@@ -123,9 +123,9 @@ class _PaymentFormState extends State<PaymentForm> {
                     CustomSurffixIcon(svgIcon: "assets/icons/Settings.svg"),
               ),
             ),
-            SizedBox(height: getProportionateScreenHeight(20)),
+            SizedBox(height: 20.0),
             FormError(errors: errors),
-            SizedBox(height: SizeConfig.screenHeight * 0.03),
+            SizedBox(height: 10.0),
             DefaultButton(
               text: "Continue",
               press: () {
@@ -155,6 +155,8 @@ class _PaymentFormState extends State<PaymentForm> {
                                     child: RaisedButton(
                                       onPressed: () async {
                                         await startCheckout();
+                                        await UserServices().makePayment(
+                                            amount: amount, type: _paymenttype);
                                         Navigator.pop(context);
                                         // Flushbar(
                                         //   flushbarPosition: FlushbarPosition.TOP,
@@ -223,7 +225,7 @@ class _PaymentFormState extends State<PaymentForm> {
                 }
               },
             ),
-            SizedBox(height: SizeConfig.screenHeight * 0.1),
+            SizedBox(height: 10.0),
           ],
         ),
       ),

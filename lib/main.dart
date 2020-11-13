@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mpesa_flutter_plugin/mpesa_flutter_plugin.dart';
 import 'package:provider/provider.dart';
+import 'package:shambarecords/providers/records_stream.dart';
 import 'package:shambarecords/providers/user_provider.dart';
 import 'package:shambarecords/routes.dart';
 import 'package:shambarecords/screens/dummy.dart';
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: UserProvider.initialize()),
+        ChangeNotifierProvider.value(value: RecordStream.initialize()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -33,4 +35,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
- 

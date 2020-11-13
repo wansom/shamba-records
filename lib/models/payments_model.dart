@@ -6,13 +6,15 @@ class ContributionsModel {
   String amount;
   String cooperative;
   String bank;
-  String date;
+  Timestamp date;
+  String paymenttype;
   ContributionsModel(
       {this.id,
       this.farmername,
       this.amount,
       this.bank,
       this.cooperative,
+      this.paymenttype,
       this.date});
   factory ContributionsModel.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
@@ -23,6 +25,7 @@ class ContributionsModel {
         amount: data['amount'],
         bank: data['bank'],
         cooperative: data['cooperative'],
+        paymenttype: data['type'],
         date: data['date']);
   }
 }
